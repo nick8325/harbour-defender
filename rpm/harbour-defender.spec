@@ -18,7 +18,7 @@ Name:       harbour-defender
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Privacy watcher
-Version:    0.4.1
+Version:    0.4.2
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -106,9 +106,14 @@ if [ -d "%{_a2configdir}" ]; then
   [ -f %{_a2configdir}/hosts ] && echo "%{_a2configdir}/hosts.editable exists exists" || echo -e "127.0.0.1                   localhost\n" >> %{_a2configdir}/hosts
   [ -f %{_a2configdir}/hosts.editable ] && echo "%{_a2configdir}/hosts.editable exists" || cp %{_a2configdir}/hosts %{_a2configdir}/hosts.editable 2>/dev/null || :
 fi
+if [ ! -f /usr/lib/systemd/system/sailfish-unlock-agent.service ]; then
+  # exchange the path unit's WantedBy in case of NOT encrypted device
+  sed -e 's/WantedBy=sailfish-unlock-agent.service/WantedBy=default.target/' -i /etc/systemd/system/%{name}.path
+fi
 systemctl start %{name}.timer
 systemctl enable %{name}.timer
 systemctl start %{name}.path
+systemctl disable %{name}.path; # this one may be needed on upgrade
 systemctl enable %{name}.path
 # >> install post
 # << install post

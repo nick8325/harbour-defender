@@ -1,12 +1,15 @@
 [Unit]
 Description=Updates Defender hosts file whenever requested
 Documentation= man:systemd.path
-After=sailfish-unlock-agent
-After=pre-user-session.target
+#user units do NOT work for system: After=pre-user-session.target
+After=sailfish-unlock-agent.service
 
 [Path]
 PathExists=/home/nemo/.config/harbour-defender/update
 PathExists=/home/defaultuser/.config/harbour-defender/update
 
 [Install]
-WantedBy=user-session.target 
+#user units do NOT work for system: WantedBy=user-session.target
+#    encrypted devices: WantedBy = sailfish-unlock-agent.service
+#NOT encrypted devices: WantedBy = default.target
+WantedBy=sailfish-unlock-agent.service

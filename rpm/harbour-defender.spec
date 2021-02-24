@@ -18,7 +18,7 @@ Name:       harbour-defender
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Privacy watcher
-Version:    0.4.2
+Version:    0.4.3
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -98,12 +98,12 @@ desktop-file-install --delete-original       \
 # Android files
 if [ -d "%{_a1configdir}" ]; then
   # Only if the dir exists
-  [ -f %{_a1configdir}/hosts ] && echo "%{_a1configdir}/hosts.editable exists exists" || echo -e "127.0.0.1                   localhost\n" >> %{_a1configdir}/hosts
+  [ -f %{_a1configdir}/hosts ] && echo "%{_a1configdir}/hosts exists" || echo -e "127.0.0.1                   localhost\n" >> %{_a1configdir}/hosts
   [ -f %{_a1configdir}/hosts.editable ] && echo "%{_a1configdir}/hosts.editable exists" || cp %{_a1configdir}/hosts %{_a1configdir}/hosts.editable 2>/dev/null || :
 fi
 if [ -d "%{_a2configdir}" ]; then
   # Only if the dir exists
-  [ -f %{_a2configdir}/hosts ] && echo "%{_a2configdir}/hosts.editable exists exists" || echo -e "127.0.0.1                   localhost\n" >> %{_a2configdir}/hosts
+  [ -f %{_a2configdir}/hosts ] && echo "%{_a2configdir}/hosts exists" || echo -e "127.0.0.1                   localhost\n" >> %{_a2configdir}/hosts
   [ -f %{_a2configdir}/hosts.editable ] && echo "%{_a2configdir}/hosts.editable exists" || cp %{_a2configdir}/hosts %{_a2configdir}/hosts.editable 2>/dev/null || :
 fi
 if [ ! -f /usr/lib/systemd/system/sailfish-unlock-agent.service ]; then

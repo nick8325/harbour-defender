@@ -106,15 +106,26 @@ if [ -d "%{_a2configdir}" ]; then
   [ -f %{_a2configdir}/hosts ] && echo "%{_a2configdir}/hosts exists" || echo -e "127.0.0.1                   localhost\n" >> %{_a2configdir}/hosts
   [ -f %{_a2configdir}/hosts.editable ] && echo "%{_a2configdir}/hosts.editable exists" || cp %{_a2configdir}/hosts %{_a2configdir}/hosts.editable 2>/dev/null || :
 fi
-if [ ! -f /usr/lib/systemd/system/sailfish-unlock-agent.service ]; then
-  # exchange the path unit's WantedBy in case of NOT encrypted device
-  sed -e 's/WantedBy=sailfish-unlock-agent.service/WantedBy=default.target/' -i /etc/systemd/system/%{name}.path
+if [ -f /usr/lib/systemd/system/sailfish-unlock-agent.service ]; then
+  #exchange the path unit's WantedBy in case of ENrypted devices, 
+  #normally the default for X.. devices and SW >= 3.3 flashed
+  sed -e 's/WantedBy=.*/WantedBy=sailfish-unlock-agent.service/' -i /etc/systemd/system/%{name}.path
+else
+  # exchange the path unit's WantedBy in case of NOT encrypted devices,
+  # for older devices not supporting or having activated  encryption
+  sed -e 's/WantedBy=.*/WantedBy=default.target/' -i /etc/systemd/system/%{name}.path
 fi
 systemctl start %{name}.timer
 systemctl enable %{name}.timer
 systemctl start %{name}.path
 systemctl disable %{name}.path; # this one may be needed on upgrade
 systemctl enable %{name}.path
+#temporary hack, until Jolla fixes nsswitch.conf problematic
+#if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ];then
+grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission
+if [ 0 != $? ];then
+    sed -e 's/^private-etc ssl,hosts,pki,crypto-policies/private-etc ssl,hosts,pki,crypto-policies,nsswitch.conf/' -i /etc/sailjail/permissions/Internet.permission
+fi
 # >> install post
 # << install post
 

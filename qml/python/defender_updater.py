@@ -139,9 +139,9 @@ def write_all(hosts):
     # Workaround to copy remote entries and keep different .editable files split
     remote_entries = list(hosts.entries)
     
-    if os.path.exists(android1_dir):
+    if os.path.isdir(android1_dir):
         write_hosts(hosts, remote_entries = remote_entries, path = android1_hosts, android = True)
-    if os.path.exists(android2_dir):
+    if os.path.isdir(android2_dir):
         write_hosts(hosts, remote_entries = remote_entries, path = android2_hosts, android = True)
     write_hosts(hosts, remote_entries = remote_entries, path = native_hosts)
     return 0

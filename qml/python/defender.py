@@ -19,10 +19,12 @@ CONFIG_HOME_PATH = CONFIG_HOME_DIR + '/'  + APP_NAME + '.conf'
 UPDATE_FILE_PATH = CONFIG_HOME_DIR + '/' + 'update'
 LOGFILE_LAST = '/var/log/'+ APP_NAME +'_last.json'
 
-cookies_path = HOME_DIR + '/.mozilla/mozembed/cookies.sqlite'
+cookies_path = HOME_DIR + '/.local/share/org.sailfishos/browser/.mozilla/' + 'cookies.sqlite'
+if not os.path.isfile(cookies_path):
+    cookies_path = HOME_DIR + '/.mozilla/mozembed/' + 'cookies.sqlite'
 
 def initialize():
-    if not os.path.exists(CONFIG_HOME_DIR):
+    if not os.path.isdir(CONFIG_HOME_DIR):
         os.makedirs(CONFIG_HOME_DIR)
 
 initialize()
@@ -73,7 +75,7 @@ def get_config_bool(section, key, fallback):
     return config_home.getboolean(section, key, fallback=True)
 
 def rebuild_config(config1, config2, force=False, enabled='no'):
-    if not os.path.exists(CONFIG_HOME_DIR):
+    if not os.path.isdir(CONFIG_HOME_DIR):
         os.makedirs(CONFIG_HOME_DIR)
     if (set(config1.sections()) != set(config2.sections())) or force:
         new_config = configparser.ConfigParser()

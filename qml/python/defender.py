@@ -111,7 +111,7 @@ def check_update():
     return os.path.isfile(UPDATE_FILE_PATH)
 
 def disable_all():
-    output = load_sources(force=True, enabled=no)
+    output = load_sources(force=True, enabled='no')
     update_now()
     return output
 

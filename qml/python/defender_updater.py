@@ -122,11 +122,12 @@ def write_hosts(hosts, remote_entries=None, path=None, editable_path=None, white
     return True
 
 def rebuild_hosts(path, android=False):
-    new_hosts = Hosts()
+    #new_hosts = Hosts() #would read all /etc/hosts entries, which we do not want
+    new_hosts = Hosts(path) #will except -catched- on populate as this path is yet invalid
     #new_hosts.add(entry_type = 'comment', comment = ">> created by hosts-adblock-plus <<")
-    add_default_entry(hosts, native = False)
+    add_default_entry(new_hosts, native = False)
     if not android:
-        add_default_entry(hosts, native = True)
+        add_default_entry(new_hosts, native = True)
     new_hosts.write(path)
 
 def check_hosts(path, android=False):

@@ -12,4 +12,4 @@ PathExists=/home/defaultuser/.config/harbour-defender/update
 #user units do NOT work for system: WantedBy=user-session.target
 #    encrypted devices: WantedBy = sailfish-unlock-agent.service
 #NOT encrypted devices: WantedBy = default.target
-WantedBy=sailfish-unlock-agent.service
+WantedBy=

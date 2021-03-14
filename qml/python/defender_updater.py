@@ -7,6 +7,7 @@ APP_DIR = '/usr/share/harbour-' + APP_NAME + '/qml/python'
 import sys
 sys.path.insert(0, APP_DIR)
 from python_hosts import Hosts, HostsEntry
+from python_hosts import UnableToWriteHosts
 from copy import copy
 import os
 import configparser
@@ -118,7 +119,10 @@ def write_hosts(hosts, remote_entries=None, path=None, editable_path=None, white
     add_default_entry(hosts, native = False)
     if not android:
         add_default_entry(hosts, native = True)
-    hosts.write(path=path)
+    try:
+        hosts.write(path=path)
+    except UnableToWriteHosts:
+        print("ERROR: could not write" + path)
     return True
 
 def rebuild_hosts(path, android=False):
@@ -128,7 +132,10 @@ def rebuild_hosts(path, android=False):
     add_default_entry(new_hosts, native = False)
     if not android:
         add_default_entry(new_hosts, native = True)
-    new_hosts.write(path)
+    try:
+        new_hosts.write(path)
+    except UnableToWriteHosts:
+        print("ERROR: could not rebuild/write" + path)
 
 def check_hosts(path, android=False):
     if android1_hosts in path:

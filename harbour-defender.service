@@ -1,5 +1,5 @@
 [Unit]
-Description=Updates the Defender hosts file
+Description=Update the Defender hosts file
 
 [Service]
 Type=oneshot

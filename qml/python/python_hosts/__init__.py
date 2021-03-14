@@ -11,5 +11,5 @@ exception: Contains the custom exceptions that are raised in the event of an err
 from python_hosts.hosts import Hosts, HostsEntry
 from python_hosts.utils import is_readable, is_ipv4, is_ipv6, valid_hostnames
 from python_hosts.exception import (HostsException, HostsEntryException,
-                                    InvalidIPv4Address, InvalidIPv6Address,
-                                    InvalidComment)
+                                    UnableToWriteHosts,
+                                    InvalidIPv4Address, InvalidIPv6Address, InvalidComment)

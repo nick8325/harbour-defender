@@ -21,9 +21,11 @@ from subprocess import check_output
 
 #CONFIG_HOME_DIR = '/home/nemo/.config/harbour-' + APP_NAME
 #doh HOME_DIR = os.environ['HOME']
-HOME_DIR = '/home/defaultuser'
+ADMIN_USER = 'defaultuser'
+HOME_DIR = '/home/' + ADMIN_USER
 if not os.path.isdir(HOME_DIR):
-  HOME_DIR = '/home/nemo'
+    ADMIN_USER = 'nemo'
+    HOME_DIR = '/home/' + ADMIN_USER
                                         
 CONFIG_HOME_DIR = HOME_DIR + '/.config/harbour-' + APP_NAME          
 CONFIG_ETC_DIR = '/etc'
@@ -33,6 +35,7 @@ CONFIG_HOME_PATH = CONFIG_HOME_DIR + '/' + APP_NAME + '.conf'
 CONFIG_APP_PATH = APP_DIR + '/' + APP_NAME + '_default.conf'
 
 UPDATE_FILE_PATH = CONFIG_HOME_DIR + '/' + 'update'
+ERRLOG_FILE_PATH = CONFIG_HOME_DIR + '/' + 'err.log'
 
 LOGFILE_LAST = '/var/log/'+ APP_NAME +'_last.json'
 
@@ -101,6 +104,13 @@ def add_default_entry(hosts, native = False):
         ])
     return 0
 
+def write_error_log(errlog=None):
+    print(errlog)
+    oserrlog1 = "echo -e \"" + "--\n$(date)" + "\" >> " + ERRLOG_FILE_PATH + " | su - " + ADMIN_USER
+    oserrlog2 = "echo    \"" + errlog        + "\" >> " + ERRLOG_FILE_PATH + " | su - " + ADMIN_USER
+    os.system(oserrlog1)
+    os.system(oserrlog2)
+
 def write_hosts(hosts, remote_entries=None, path=None, editable_path=None, whitelist=whitelist, android=False):
     # Insert entries
     if remote_entries:
@@ -122,7 +132,7 @@ def write_hosts(hosts, remote_entries=None, path=None, editable_path=None, white
     try:
         hosts.write(path=path)
     except UnableToWriteHosts:
-        print("ERROR: could not write" + path)
+        write_error_log("ERROR: could not write " + path)
     return True
 
 def rebuild_hosts(path, android=False):
@@ -135,7 +145,7 @@ def rebuild_hosts(path, android=False):
     try:
         new_hosts.write(path)
     except UnableToWriteHosts:
-        print("ERROR: could not rebuild/write" + path)
+        write_error_log("ERROR: could not rebuild/write " + path)
 
 def check_hosts(path, android=False):
     if android1_hosts in path:
@@ -165,6 +175,8 @@ def update(remote_sources = urls):
         hosts.import_url(url = remote_source['url'], single_format = remote_source['single_format'], sanitize = sanitize)
     
     # Workaround to copy remote entries and keep different .editable files split
+    if os.path.isfile(ERRLOG_FILE_PATH):
+        os.remove(ERRLOG_FILE_PATH)
     write_all(hosts)
     if os.path.isfile(tmp_hosts):
         os.remove(tmp_hosts)

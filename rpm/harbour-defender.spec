@@ -120,6 +120,8 @@ systemctl enable %{name}.timer
 systemctl start %{name}.path
 systemctl disable %{name}.path; # this one may be needed on upgrade
 systemctl enable %{name}.path
+#sed the version number
+sed -e 's/text: \"[0-9]\.[0-9]\.[0-9]\"/text: \"%{version}\"/' -i %{_datadir}/%{name}/qml/pages/DocsPage.qml
 #temporary hack, until Jolla fixes nsswitch.conf problematic
 #if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ];then
 grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission
@@ -136,6 +138,7 @@ if [ "$1" = "0" ]; then
     systemctl disable %{name}.timer
     systemctl stop %{name}.path
     systemctl disable %{name}.path
+    [ -f /home/defaultuser/%{name}/update ] && rm /home/defaultuser/%{name}/update ] || [ -f /home/nemo/%{name}/update ] && rm /home/nemo/%{name}/update || :
     [ -f %{_sysconfdir}/hosts.editable ] && cp %{_sysconfdir}/hosts.editable %{_sysconfdir}/hosts 2>/dev/null || echo "/etc/hosts.editable does not exist"
     [ -f %{_a1configdir}/hosts.editable ] && cp %{_a1configdir}/hosts.editable %{_a1configdir}/hosts 2>/dev/null || echo "%{_a1configdir}/hosts.editable does not exist"
     [ -f %{_a2configdir}/hosts.editable ] && cp %{_a2configdir}/hosts.editable %{_a2configdir}/hosts 2>/dev/null || echo "%{_a2configdir}/hosts.editable does not exist"

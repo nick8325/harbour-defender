@@ -68,6 +68,12 @@ ApplicationWindow
         })
     }
 
+    function clearUpdateLoop() {
+        py.call(appname+'.clear_update_loop', [], function(result) {
+            updating = false
+        })
+    }
+
     function disableAll() {
         py.call(appname+'.disable_all', [], function(result) {
             sourcesModel.clear()

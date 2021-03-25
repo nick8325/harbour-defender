@@ -110,6 +110,11 @@ def update_now():
 def check_update():
     return os.path.isfile(UPDATE_FILE_PATH)
 
+def clear_update_loop():
+    #os.system("ps aux | grep defender_updater.py | grep -v grep | tr -s ' ' | cut -d' ' -f2 | xargs kill")
+    if os.path.isfile(UPDATE_FILE_PATH):
+        os.remove(UPDATE_FILE_PATH)
+
 def disable_all():
     output = load_sources(force=True, enabled='no')
     update_now()

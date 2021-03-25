@@ -16,6 +16,17 @@ Page {
             width: page.width
             spacing: Theme.paddingLarge
             PageHeader {
+                title: qsTr("Version")
+            }
+            Label {
+                x: Theme.paddingLarge
+                width: parent.width - 2*x
+                text: "0.0.0"
+                color: Theme.primaryColor
+                wrapMode: Text.Wrap
+                font.pixelSize: Theme.fontSizeMedium
+            }
+            PageHeader {
                 title: qsTr("Warning")
             }
             Label {

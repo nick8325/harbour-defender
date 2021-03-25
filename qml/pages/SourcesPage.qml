@@ -10,9 +10,17 @@ Page {
         anchors.fill: parent
         PullDownMenu {
             MenuItem {
-                text: qsTr("Disable")
+                text: qsTr("Clear update loop (reboot needed)")
                 onClicked: {
-                    remorse.execute("Preparing", function() {
+                    remorse.execute("Preparing clear", function() {
+                        clearUpdateLoop()
+                    })
+                }
+            }
+            MenuItem {
+                text: qsTr("Disable all")
+                onClicked: {
+                    remorse.execute("Preparing disable", function() {
                         disableAll()
                     })
                 }

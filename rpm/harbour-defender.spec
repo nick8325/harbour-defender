@@ -18,7 +18,7 @@ Name:       harbour-defender
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Privacy watcher
-Version:    0.5.5
+Version:    0.5.6
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -126,7 +126,7 @@ sed -e 's/text: \"[0-9]\.[0-9]\.[0-9]\"/text: \"%{version}\"/' -i %{_datadir}/%{
 #if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ];then
 grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission
 if [ 0 != $? ];then
-    sed -e 's/^private-etc ssl,hosts,pki,crypto-policies/private-etc ssl,hosts,pki,crypto-policies,nsswitch.conf/' -i /etc/sailjail/permissions/Internet.permission
+    sed -e 's/^private-etc /private-etc nsswitch.conf,/' -i /etc/sailjail/permissions/Internet.permission
 fi
 # >> install post
 # << install post

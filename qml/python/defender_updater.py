@@ -15,6 +15,7 @@ from shutil import copyfile
 import json
 import time
 from subprocess import check_output
+import socket
 
 
 #APP_DIR = '/opt/sdk/harbour-' + APP_NAME + '/usr/share/harbour-' + APP_NAME + '/qml/python''
@@ -55,20 +56,26 @@ android2_dir="/opt/alien/system/etc"
 android2_hosts="/opt/alien/system/etc/hosts"
 
 
+config_etc = configparser.ConfigParser()
+config_etc.read(CONFIG_ETC_PATH)
+config_home = configparser.ConfigParser()
+config_home.read(CONFIG_HOME_PATH)
+
+
 def load_sources():
     urls = []
     #zip_urls = []
-    config_etc = configparser.ConfigParser()
-    config_etc.read(CONFIG_ETC_PATH)
-    config_home = configparser.ConfigParser()
-    config_home.read(CONFIG_HOME_PATH)
+    #config_etc = configparser.ConfigParser()
+    #config_etc.read(CONFIG_ETC_PATH)
+    #config_home = configparser.ConfigParser()
+    #config_home.read(CONFIG_HOME_PATH)
     whitelist = []
     whitelist_priority = True
     sanitize = True
 
     for entry in config_etc.sections():
         if entry in ['SETTINGS', 'DEFAULT']:
-            wlan_only = config_home.getboolean("SETTINGS", "WlanOnly", fallback = config_etc.getboolean("SETTINGS", "WlanOnly", fallback = True))            
+            #wlan_only = config_home.getboolean("SETTINGS", "WlanOnly", fallback = config_etc.getboolean("SETTINGS", "WlanOnly", fallback = True)) 
             whitelist = config_etc.get("SETTINGS", "HostsWhitelist", fallback = '')
             if whitelist:
                 whitelist = whitelist.split(',')
@@ -82,11 +89,11 @@ def load_sources():
             enabled = config_home.getboolean(entry, 'sourceenabled', fallback = config_etc.getboolean(entry, 'sourceenabled', fallback = False))
             if enabled:
                 urls.append({'url': config_etc[entry]['Url'], 'single_format': config_etc.getboolean(entry, 'SingleFormat', fallback=False)})
-    if len(urls) > 0:
-        # getting remote urls
-        if wlan_only and "Not connected" in check_output(["iw", "dev", "wlan0", "link"]).decode("utf-8"):
-            print("WLAN not connected")
-            urls = []
+    #if len(urls) > 0:
+    #    # getting remote urls
+    #    if wlan_only and "Not connected" in check_output(["iw", "dev", "wlan0", "link"]).decode("utf-8"):
+    #        print("WLAN not connected")
+    #        urls = []
     return urls, whitelist, whitelist_priority, sanitize, single_editable
 
 urls, whitelist, whitelist_priority, sanitize, single_editable = load_sources()
@@ -196,6 +203,25 @@ def reset_hosts():
 if __name__ == '__main__':
     if not os.path.isfile(CONFIG_ETC_PATH):
         copyfile(CONFIG_APP_PATH, CONFIG_ETC_PATH)
-    update(urls)
+    try:
+        print ('Check internet')
+        socket.gethostbyname('www.google.com')
+        print ('Internet connected')
+    except:
+        print ('Internet not connected')
+        write_error_log('No internet - canceling update')
+    else:
+        #config_etc = configparser.ConfigParser()
+        #config_etc.read(CONFIG_ETC_PATH)
+        #config_home = configparser.ConfigParser()
+        #config_home.read(CONFIG_HOME_PATH)
+        for entry in config_etc.sections():
+            if entry in ['SETTINGS', 'DEFAULT']:
+                wlan_only = config_home.getboolean("SETTINGS", "WlanOnly", fallback = config_etc.getboolean("SETTINGS", "WlanOnly", fallback = True))
+        if wlan_only and "Not connected" in check_output(["iw", "dev", "wlan0", "link"]).decode("utf-8"):
+            print('WLAN not connected')
+            write_error_log('WLAN required but not connected - canceling update')
+        else:
+            update(urls)
     if os.path.isfile(UPDATE_FILE_PATH):
         os.remove(UPDATE_FILE_PATH)

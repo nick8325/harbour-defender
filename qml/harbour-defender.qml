@@ -74,6 +74,12 @@ ApplicationWindow
         })
     }
 
+    function showErrorLog() {
+        py.call(appname+'.show_error_log', [], function(result) {
+            //
+        })
+    }
+
     function disableAll() {
         py.call(appname+'.disable_all', [], function(result) {
             sourcesModel.clear()

@@ -111,7 +111,7 @@ if [ -f /usr/lib/systemd/system/sailfish-unlock-agent.service ]; then
   #normally the default for X.. devices and SW >= 3.3 flashed
   sed -e 's/WantedBy=.*/WantedBy=sailfish-unlock-agent.service/' -i /etc/systemd/system/%{name}.path
 else
-  # exchange the path unit's WantedBy in case of NOT encrypted devices,
+  # exchange the path unit's WantedBy in case of NOT encrypted devices, 
   # for older devices not supporting or having activated  encryption
   sed -e 's/WantedBy=.*/WantedBy=default.target/' -i /etc/systemd/system/%{name}.path
 fi
@@ -123,9 +123,9 @@ systemctl enable %{name}.path
 #sed the version number
 sed -e 's/text: \"[0-9]\.[0-9]\.[0-9]\"/text: \"%{version}\"/' -i %{_datadir}/%{name}/qml/pages/DocsPage.qml
 #temporary hack, until Jolla fixes nsswitch.conf problematic
-#if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ];then
+#if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ]; then
 grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission
-if [ 0 != $? ];then
+if [ 0 != $? ]; then
     sed -e 's/^private-etc /private-etc nsswitch.conf,/' -i /etc/sailjail/permissions/Internet.permission
 fi
 # >> install post

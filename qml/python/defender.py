@@ -17,6 +17,7 @@ CONFIG_ETC_PATH = CONFIG_ETC_DIR + '/'  + APP_NAME + '.conf'
 CONFIG_HOME_PATH = CONFIG_HOME_DIR + '/'  + APP_NAME + '.conf'
 
 UPDATE_FILE_PATH = CONFIG_HOME_DIR + '/' + 'update'
+ERRLOG_FILE_PATH = CONFIG_HOME_DIR + '/' + 'error.log'
 LOGFILE_LAST = '/var/log/'+ APP_NAME +'_last.json'
 
 cookies_path = HOME_DIR + '/.local/share/org.sailfishos/browser/.mozilla/' + 'cookies.sqlite'
@@ -119,6 +120,10 @@ def disable_all():
     output = load_sources(force=True, enabled='no')
     update_now()
     return output
+
+def show_error_log():
+    if os.path.isfile(ERRLOG_FILE_PATH):
+        os.system("sailfish-browser " + ERRLOG_FILE_PATH)
 
 def touch(path):
     with open(path, 'a'):

@@ -36,7 +36,7 @@ CONFIG_HOME_PATH = CONFIG_HOME_DIR + '/' + APP_NAME + '.conf'
 CONFIG_APP_PATH = APP_DIR + '/' + APP_NAME + '_default.conf'
 
 UPDATE_FILE_PATH = CONFIG_HOME_DIR + '/' + 'update'
-ERRLOG_FILE_PATH = CONFIG_HOME_DIR + '/' + 'err.log'
+ERRLOG_FILE_PATH = CONFIG_HOME_DIR + '/' + 'error.log'
 
 LOGFILE_LAST = '/var/log/'+ APP_NAME +'_last.json'
 
@@ -176,14 +176,18 @@ def update(remote_sources = urls):
     Main update function - takes a list of remote source URLs, writes all available hosts and returns 0.
     """
     hosts = Hosts(path=tmp_hosts)
-    # Adding remote sources
-    for remote_source in remote_sources:
-        print(remote_source['url'])
-        hosts.import_url(url = remote_source['url'], single_format = remote_source['single_format'], sanitize = sanitize)
-    
-    # Workaround to copy remote entries and keep different .editable files split
     if os.path.isfile(ERRLOG_FILE_PATH):
         os.remove(ERRLOG_FILE_PATH)
+    
+    # Adding remote sources
+    for remote_source in remote_sources:
+        try:
+            print(remote_source['url'])
+            hosts.import_url(url = remote_source['url'], single_format = remote_source['single_format'], sanitize = sanitize)
+        except Exception as e:
+            write_error_log('WARNING: URL ' + remote_source['url'] + ' - ' + str(e))
+
+    # Workaround to copy remote entries and keep different .editable files split
     write_all(hosts)
     if os.path.isfile(tmp_hosts):
         os.remove(tmp_hosts)
@@ -209,7 +213,7 @@ if __name__ == '__main__':
         print ('Internet connected')
     except:
         print ('Internet not connected')
-        write_error_log('No internet - canceling update')
+        write_error_log('ERROR: no internet - canceling update')
     else:
         #config_etc = configparser.ConfigParser()
         #config_etc.read(CONFIG_ETC_PATH)
@@ -220,7 +224,7 @@ if __name__ == '__main__':
                 wlan_only = config_home.getboolean("SETTINGS", "WlanOnly", fallback = config_etc.getboolean("SETTINGS", "WlanOnly", fallback = True))
         if wlan_only and "Not connected" in check_output(["iw", "dev", "wlan0", "link"]).decode("utf-8"):
             print('WLAN not connected')
-            write_error_log('WLAN required but not connected - canceling update')
+            write_error_log('ERROR: WLAN required but not connected - canceling update')
         else:
             update(urls)
     if os.path.isfile(UPDATE_FILE_PATH):

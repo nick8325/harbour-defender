@@ -10,10 +10,18 @@ Page {
         anchors.fill: parent
         PullDownMenu {
             MenuItem {
-                text: qsTr("Clear update loop (reboot needed)")
+                text: qsTr("Clear update loop (possibly restart?)")
                 onClicked: {
                     remorse.execute("Preparing clear", function() {
                         clearUpdateLoop()
+                    })
+                }
+            }
+            MenuItem {
+                text: qsTr("Show error log (just in case ;)")
+                onClicked: {
+                    remorse.execute("Pulling up error.log (only if exists)", function() {
+                        showErrorLog()
                     })
                 }
             }

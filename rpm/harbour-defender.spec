@@ -18,7 +18,7 @@ Name:       harbour-defender
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Privacy watcher
-Version:    0.5.6
+Version:    0.5.7
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -122,6 +122,11 @@ systemctl disable %{name}.path; # this one may be needed on upgrade
 systemctl enable %{name}.path
 #sed the version number
 sed -e 's/text: \"[0-9]\.[0-9]\.[0-9]\"/text: \"%{version}\"/' -i %{_datadir}/%{name}/qml/pages/DocsPage.qml
+#temporary hack, until Jolla fixes aliendalvik bind mount of /system/etc/hosts
+grep -q '^lxc\.mount\.entry.=./system/etc/hosts system/etc/hosts' /var/lib/lxc/aliendalvik/extra_config
+if [ 0 != $? ]; then
+    echo "lxc.mount.entry = /system/etc/hosts system/etc/hosts none,bind,ro 0 0" >> /var/lib/lxc/aliendalvik/extra_config
+fi
 #temporary hack, until Jolla fixes nsswitch.conf problematic
 #if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ]; then
 grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission

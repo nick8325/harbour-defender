@@ -62,9 +62,12 @@ ApplicationWindow
         })
     }
 
-    function updateNow() {
-        py.call(appname+'.update_now', [], function(result) {
-            updating = true
+    function disableAll() {
+        py.call(appname+'.disable_all', [], function(result) {
+            sourcesModel.clear()
+            for (var i = 0; i < result.length; i++) {
+                sourcesModel.append(result[i])
+            }
         })
     }
 
@@ -80,12 +83,15 @@ ApplicationWindow
         })
     }
 
-    function disableAll() {
-        py.call(appname+'.disable_all', [], function(result) {
-            sourcesModel.clear()
-            for (var i = 0; i < result.length; i++) {
-                sourcesModel.append(result[i])
-            }
+    function restartAndroidSupport() {
+        py.call(appname+'.restart_android_support', [], function(result) {
+            //
+        })
+    }
+
+    function updateNow() {
+        py.call(appname+'.update_now', [], function(result) {
+            updating = true
         })
     }
 

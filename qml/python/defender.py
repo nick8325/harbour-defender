@@ -99,6 +99,23 @@ def rebuild_config(config1, config2, force=False, enabled='no'):
     else:
         return config2
 
+def disable_all():
+    output = load_sources(force=True, enabled='no')
+    update_now()
+    return output
+
+def clear_update_loop():
+    #os.system("ps aux | grep defender_updater.py | grep -v grep | tr -s ' ' | cut -d' ' -f2 | xargs kill")
+    if os.path.isfile(UPDATE_FILE_PATH):
+        os.remove(UPDATE_FILE_PATH)
+
+def show_error_log():
+    if os.path.isfile(ERRLOG_FILE_PATH):
+        os.system("sailfish-browser " + ERRLOG_FILE_PATH)
+
+def restart_android_support():
+    os.system("systemctl restart aliendalvik")
+
 def update_now():
     """
     Creates a file in the config directory, which triggers an update.
@@ -110,20 +127,6 @@ def update_now():
 
 def check_update():
     return os.path.isfile(UPDATE_FILE_PATH)
-
-def clear_update_loop():
-    #os.system("ps aux | grep defender_updater.py | grep -v grep | tr -s ' ' | cut -d' ' -f2 | xargs kill")
-    if os.path.isfile(UPDATE_FILE_PATH):
-        os.remove(UPDATE_FILE_PATH)
-
-def disable_all():
-    output = load_sources(force=True, enabled='no')
-    update_now()
-    return output
-
-def show_error_log():
-    if os.path.isfile(ERRLOG_FILE_PATH):
-        os.system("sailfish-browser " + ERRLOG_FILE_PATH)
 
 def touch(path):
     with open(path, 'a'):

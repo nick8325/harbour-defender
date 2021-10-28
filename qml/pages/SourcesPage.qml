@@ -10,6 +10,14 @@ Page {
         anchors.fill: parent
         PullDownMenu {
             MenuItem {
+                text: qsTr("Disable all")
+                onClicked: {
+                    remorse.execute("Preparing disable", function() {
+                        disableAll()
+                    })
+                }
+            }
+            MenuItem {
                 text: qsTr("Clear update loop (possibly restart?)")
                 onClicked: {
                     remorse.execute("Preparing clear", function() {
@@ -26,10 +34,10 @@ Page {
                 }
             }
             MenuItem {
-                text: qsTr("Disable all")
+                text: qsTr("Restart Android support")
                 onClicked: {
-                    remorse.execute("Preparing disable", function() {
-                        disableAll()
+                    remorse.execute("Preparing Android restart", function() {
+                        restartAndroidSupport()
                     })
                 }
             }

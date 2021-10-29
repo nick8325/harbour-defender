@@ -111,7 +111,7 @@ def clear_update_loop():
 
 def show_error_log():
     if os.path.isfile(ERRLOG_FILE_PATH):
-        os.system("sailfish-browser " + ERRLOG_FILE_PATH)
+        os.system("sailfish-browser " + ERRLOG_FILE_PATH + " &")
 
 def restart_android_support():
     os.system("systemctl restart aliendalvik")

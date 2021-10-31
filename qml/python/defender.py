@@ -105,7 +105,15 @@ def disable_all():
     return output
 
 def clear_update_loop():
-    #os.system("ps aux | grep defender_updater.py | grep -v grep | tr -s ' ' | cut -d' ' -f2 | xargs kill")
+    ##os.system("ps aux | grep -v grep | grep defender_updater | tr -s ' ' | cut -d' ' -f2 | xargs kill")
+    #os.system("ps aux | grep -v grep | grep defender_updater; \
+    #           if [ 0 != $? ]; then \
+    #               echo '--' >> " + ERRLOG_FILE_PATH + "; \
+    #               echo 'INFO: update was still running - cancelled' >> " + ERRLOG_FILE_PATH + "; \
+    #               systemctl stop harbour-defender; \
+    #           fi;")
+    ##above would need root rights (defender_updater), possibbly via service/path unit
+    show_error_log;
     if os.path.isfile(UPDATE_FILE_PATH):
         os.remove(UPDATE_FILE_PATH)
 

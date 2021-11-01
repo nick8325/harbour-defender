@@ -114,10 +114,14 @@ if [ -f /usr/lib/systemd/system/sailfish-unlock-agent.service ]; then
   #exchange the path unit's WantedBy in case of ENrypted devices, 
   #normally the default for X.. devices and SW >= 3.3 flashed
   sed -e 's/WantedBy=.*/WantedBy=sailfish-unlock-agent.service/' -i /etc/systemd/system/%{name}.path
+  sed -e 's/WantedBy=.*/WantedBy=sailfish-unlock-agent.service/' -i /etc/systemd/system/%{name}-adRestart.path
+  sed -e 's/WantedBy=.*/WantedBy=sailfish-unlock-agent.service/' -i /etc/systemd/system/%{name}-updLoop.path
 else
   # exchange the path unit's WantedBy in case of NOT encrypted devices, 
   # for older devices not supporting or having activated  encryption
   sed -e 's/WantedBy=.*/WantedBy=default.target/' -i /etc/systemd/system/%{name}.path
+  sed -e 's/WantedBy=.*/WantedBy=default.target/' -i /etc/systemd/system/%{name}-adRestart.path
+  sed -e 's/WantedBy=.*/WantedBy=default.target/' -i /etc/systemd/system/%{name}-updLoop.path
 fi
 systemctl start %{name}.timer
 systemctl enable %{name}.timer

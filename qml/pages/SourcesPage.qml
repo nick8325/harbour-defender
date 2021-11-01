@@ -18,9 +18,9 @@ Page {
                 }
             }
             MenuItem {
-                text: qsTr("Clear update loop (possibly restart?)")
+                text: qsTr("Cancel/clear update loop")
                 onClicked: {
-                    remorse.execute("Preparing clear", function() {
+                    remorse.execute("Preparing cancel/clear", function() {
                         clearUpdateLoop()
                     })
                 }

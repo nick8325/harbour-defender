@@ -82,6 +82,10 @@ desktop-file-install --delete-original       \
 %attr(0644,root,root) %{_unitdir}/%{name}.service
 %attr(0644,root,root) %{_unitdir}/%{name}.timer
 %attr(0644,root,root) %{_unitdir}/%{name}.path
+%attr(0644,root,root) %{_unitdir}/%{name}-adRestart.service
+%attr(0644,root,root) %{_unitdir}/%{name}-adRestart.path
+%attr(0644,root,root) %{_unitdir}/%{name}-updLoop.service
+%attr(0644,root,root) %{_unitdir}/%{name}-updLoop.path
 # %config %{_sysconfdir}/%{shortname}.conf
 %attr(0644,root,root) %{_sysconfdir}/%{shortname}.conf
 %exclude %{_datadir}/%{name}/qml/python/*.pyc
@@ -120,6 +124,10 @@ systemctl enable %{name}.timer
 systemctl start %{name}.path
 systemctl disable %{name}.path; # this one may be needed on upgrade
 systemctl enable %{name}.path
+systemctl start %{name}-adRestart.path
+systemctl enable %{name}-adRestart.path
+systemctl start %{name}-updLoop.path
+systemctl enable %{name}-updLoop.path
 #sed the version number
 sed -e 's/text: \"[0-9]\.[0-9]\.[0-9]\"/text: \"%{version}\"/' -i %{_datadir}/%{name}/qml/pages/DocsPage.qml
 #temporary hack, until Jolla fixes aliendalvik bind mount of /system/etc/hosts

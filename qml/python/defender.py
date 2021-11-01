@@ -10,6 +10,7 @@ APP_NAME = 'defender'
 
 #CONFIG_HOME_DIR = '/home/nemo/.config/harbour-' + APP_NAME
 HOME_DIR = os.environ['HOME']
+os.system("echo -n '" + HOME_DIR + "' > /tmp/defender.dir")
 CONFIG_HOME_DIR = HOME_DIR + '/.config/harbour-' + APP_NAME
 CONFIG_ETC_DIR = '/etc'
 
@@ -17,6 +18,8 @@ CONFIG_ETC_PATH = CONFIG_ETC_DIR + '/'  + APP_NAME + '.conf'
 CONFIG_HOME_PATH = CONFIG_HOME_DIR + '/'  + APP_NAME + '.conf'
 
 UPDATE_FILE_PATH = CONFIG_HOME_DIR + '/' + 'update'
+UPDLOOP_FILE_PATH = CONFIG_HOME_DIR + '/' + 'updLoop'
+ADRESTART_FILE_PATH = CONFIG_HOME_DIR + '/' + 'adRestart'
 ERRLOG_FILE_PATH = CONFIG_HOME_DIR + '/' + 'error.log'
 LOGFILE_LAST = '/var/log/'+ APP_NAME +'_last.json'
 
@@ -105,24 +108,31 @@ def disable_all():
     return output
 
 def clear_update_loop():
-    ##os.system("ps aux | grep -v grep | grep defender_updater | tr -s ' ' | cut -d' ' -f2 | xargs kill")
-    #os.system("ps aux | grep -v grep | grep defender_updater; \
-    #           if [ 0 != $? ]; then \
-    #               echo '--' >> " + ERRLOG_FILE_PATH + "; \
-    #               echo 'INFO: update was still running - cancelled' >> " + ERRLOG_FILE_PATH + "; \
-    #               systemctl stop harbour-defender; \
-    #           fi;")
-    ##above would need root rights (defender_updater), possibbly via service/path unit
-    show_error_log;
+    #os.system("ps aux | grep -v grep | grep defender_updater | tr -s ' ' | cut -d' ' -f2 | xargs kill")
+    os.system("ps aux | grep -v grep | grep defender_updater; \
+               if [ 0 == $? ]; then \
+                   echo '--' >> " + ERRLOG_FILE_PATH + "; \
+                   echo 'INFO: update was still running - cancelled' >> " + ERRLOG_FILE_PATH + "; \
+                   `#systemctl stop harbour-defender; \
+                   #above would need root rights (defender_updater), possibly via service/path unit:` \
+                   touch " + UPDLOOP_FILE_PATH + "; sleep 1; \
+               fi;")
+    show_error_log()
     if os.path.isfile(UPDATE_FILE_PATH):
         os.remove(UPDATE_FILE_PATH)
+    if os.path.isfile(UPDLOOP_FILE_PATH):
+        os.remove(UPDLOOP_FILE_PATH)
 
 def show_error_log():
     if os.path.isfile(ERRLOG_FILE_PATH):
         os.system("sailfish-browser " + ERRLOG_FILE_PATH + " &")
 
 def restart_android_support():
-    os.system("systemctl restart aliendalvik")
+    #os.system("systemctl restart aliendalvik")
+    ##above would need root rights (defender_updater), possibly via service/path unit:
+    os.system("touch " + ADRESTART_FILE_PATH + "; sleep 1;")
+    if os.path.isfile(ADRESTART_FILE_PATH):
+        os.remove(ADRESTART_FILE_PATH)
 
 def update_now():
     """

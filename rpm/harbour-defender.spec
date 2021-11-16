@@ -62,9 +62,9 @@ rm -rf %{buildroot}
 # >> install pre
 # << install pre
 mkdir -p %{buildroot}/%{_unitdir}
-cp ../%{name}/%{name}.service %{buildroot}/%{_unitdir}/%{name}.service
+cp ../%{name}/%{name}*.service %{buildroot}/%{_unitdir}/
 cp ../%{name}/%{name}.timer %{buildroot}/%{_unitdir}/%{name}.timer
-cp ../%{name}/%{name}.path %{buildroot}/%{_unitdir}/%{name}.path
+cp ../%{name}/%{name}*.path %{buildroot}/%{_unitdir}/
 mkdir -p %{buildroot}/%{_sysconfdir}
 cp ../%{name}/qml/python/%{shortname}_default.conf %{buildroot}/%{_sysconfdir}/%{shortname}.conf
 %qmake5_install
@@ -75,17 +75,13 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-%{_bindir}
+%{_bindir}/*
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-%attr(0644,root,root) %{_unitdir}/%{name}.service
+%attr(0644,root,root) %{_unitdir}/%{name}*.service
 %attr(0644,root,root) %{_unitdir}/%{name}.timer
-%attr(0644,root,root) %{_unitdir}/%{name}.path
-%attr(0644,root,root) %{_unitdir}/%{name}-adRestart.service
-%attr(0644,root,root) %{_unitdir}/%{name}-adRestart.path
-%attr(0644,root,root) %{_unitdir}/%{name}-updLoop.service
-%attr(0644,root,root) %{_unitdir}/%{name}-updLoop.path
+%attr(0644,root,root) %{_unitdir}/%{name}*.path
 # %config %{_sysconfdir}/%{shortname}.conf
 %attr(0644,root,root) %{_sysconfdir}/%{shortname}.conf
 %exclude %{_datadir}/%{name}/qml/python/*.pyc

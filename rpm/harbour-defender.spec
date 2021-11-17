@@ -133,7 +133,7 @@ sed -e 's/text: \"[0-9]\.[0-9]\.[0-9]\"/text: \"%{version}\"/' -i %{_datadir}/%{
 #temporary hack, until Jolla fixes aliendalvik bind mount of /system/etc/hosts
 grep -q '^lxc\.mount\.entry.=./system/etc/hosts system/etc/hosts' /var/lib/lxc/aliendalvik/extra_config
 if [ 0 != $? ]; then
-    echo "lxc.mount.entry = /system/etc/hosts system/etc/hosts none,bind,ro 0 0" >> /var/lib/lxc/aliendalvik/extra_config
+    echo "lxc.mount.entry = /system/etc/hosts system/etc/hosts none bind,ro 0 0" >> /var/lib/lxc/aliendalvik/extra_config
 fi
 #temporary hack, until Jolla fixes nsswitch.conf problematic
 #if [ 0 != `grep -q '^private-etc.*nsswitch.conf' /etc/sailjail/permissions/Internet.permission` ]; then

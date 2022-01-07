@@ -33,6 +33,7 @@ BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 BuildRequires:  systemd
+BuildRequires:  qt5-qttools-linguist
 Conflicts:      sailfishos-hosts-adblock
 Conflicts:      noadshosts
 

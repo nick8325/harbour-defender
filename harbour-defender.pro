@@ -20,7 +20,6 @@ OTHER_FILES += qml/harbour-defender.qml \
     qml/cover/CoverPage.qml \
     rpm/harbour-defender.changes.in \
     rpm/harbour-defender.spec \
-    rpm/harbour-defender.yaml \
     translations/*.ts \
     harbour-defender.desktop
 

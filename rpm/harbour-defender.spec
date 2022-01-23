@@ -21,7 +21,7 @@ Summary:    Privacy watcher
 Version:    0.5.7
 Release:    1
 Group:      Qt/Qt
-License:    LICENSE
+License:    GPLv3
 URL:        https://openrepos.net/content/peterleinchen/defender-ii-updated-encrypted-devices-originated-nodevel
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  %{name}.yaml

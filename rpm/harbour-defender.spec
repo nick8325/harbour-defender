@@ -31,6 +31,13 @@ Conflicts:      noadshosts
 %description
 Configurable adblocker and privacy tuner
 
+%if "%{?vendor}" == "chum"
+PackageName: Defender
+Categories:
+ - System
+ - Network
+Icon: https://raw.githubusercontent.com/peterleinchen/harbour-defender/master/qml/pages/images/harbour-defender.svg
+%endif
 
 %prep
 %setup -q -n %{name}-%{version}

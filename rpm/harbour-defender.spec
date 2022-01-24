@@ -37,18 +37,12 @@ Configurable adblocker and privacy tuner
 
 %build
 
-%qtc_qmake5 
+%qtc_qmake5 CONFDIR=%{_sysconfdir} UNITDIR=%{_unitdir}
 
 %qtc_make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_unitdir}
-cp ../%{name}/%{name}*.service %{buildroot}/%{_unitdir}/
-cp ../%{name}/%{name}.timer %{buildroot}/%{_unitdir}/%{name}.timer
-cp ../%{name}/%{name}*.path %{buildroot}/%{_unitdir}/
-mkdir -p %{buildroot}/%{_sysconfdir}
-cp ../%{name}/qml/python/%{shortname}_default.conf %{buildroot}/%{_sysconfdir}/%{shortname}.conf
 %qmake5_install
 
 desktop-file-install --delete-original       \

@@ -20,11 +20,28 @@ OTHER_FILES += qml/harbour-defender.qml \
     qml/cover/CoverPage.qml \
     rpm/harbour-defender.changes.in \
     rpm/harbour-defender.spec \
-    rpm/harbour-defender.yaml \
     translations/*.ts \
     harbour-defender.desktop
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
+
+# Installs
+units.files = \
+   harbour-defender-adRestart.service  \
+   harbour-defender.service  \
+   harbour-defender-updLoop.service \
+   harbour-defender.timer \
+   harbour-defender-adRestart.path  \
+   harbour-defender.path  \
+   harbour-defender-updLoop.path
+units.path = $${UNITDIR}
+INSTALLS += units
+
+conf.path = $${CONFDIR}
+conf.extra = \
+  install -p -m 644 $$PWD/qml/python/defender_default.conf \
+  ${INSTALL_ROOT}$${CONFDIR}/defender.conf
+INSTALLS += conf
 
 # to disable building translations every time, comment out the
 # following CONFIG line
